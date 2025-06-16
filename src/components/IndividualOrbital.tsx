@@ -26,9 +26,9 @@ const IndividualOrbital = ({ orbitalType, isAnimating, title, description }: Ind
             camera={{ position: [4, 4, 4], fov: 50 }}
             style={{ background: 'transparent' }}
           >
-            <ambientLight intensity={0.3} />
-            <directionalLight position={[10, 10, 5]} intensity={1} />
-            <pointLight position={[-10, -10, -5]} intensity={0.5} color="#4f46e5" />
+            <ambientLight intensity={0.4} />
+            <directionalLight position={[10, 10, 5]} intensity={1.2} />
+            <pointLight position={[-10, -10, -5]} intensity={0.6} color="#4f46e5" />
             
             <OrbitalVisualization 
               orbitalType={orbitalType} 
@@ -44,23 +44,27 @@ const IndividualOrbital = ({ orbitalType, isAnimating, title, description }: Ind
             />
             
             {/* Coordinate System Labels */}
-            <Html position={[2.5, 0, 0]}>
+            <Html position={[2.8, 0, 0]}>
               <div className="text-red-400 font-bold text-sm">+X</div>
             </Html>
-            <Html position={[0, 2.5, 0]}>
+            <Html position={[0, 2.8, 0]}>
               <div className="text-green-400 font-bold text-sm">+Y</div>
             </Html>
-            <Html position={[0, 0, 2.5]}>
+            <Html position={[0, 0, 2.8]}>
               <div className="text-blue-400 font-bold text-sm">+Z</div>
             </Html>
           </Canvas>
         </div>
         
-        {/* Electron Path Legend */}
+        {/* Simplified Legend */}
         <div className="mt-4 flex items-center justify-center gap-4">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-yellow-400 animate-pulse"></div>
             <span className="text-xs text-gray-300">Electron</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-1 bg-purple-500 rounded"></div>
+            <span className="text-xs text-gray-300">Orbital Path</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-purple-500"></div>

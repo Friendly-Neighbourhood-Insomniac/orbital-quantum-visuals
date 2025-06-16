@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -130,32 +129,32 @@ const Index = () => {
             </div>
           )}
 
-          {/* Legend */}
+          {/* Updated Legend */}
           <Card className="mt-6 bg-white/10 backdrop-blur-sm border-white/20 text-white">
             <CardHeader>
-              <CardTitle className="text-lg text-center">Animation Legend</CardTitle>
+              <CardTitle className="text-lg text-center">Visualization Legend</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
-                <div className="flex items-center gap-3">
-                  <div className="w-4 h-4 rounded-full bg-red-500"></div>
-                  <span>Positive Lobe (+)</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-4 h-4 rounded-full bg-blue-500"></div>
-                  <span>Negative Lobe (-)</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-4 h-4 rounded-full bg-gray-500"></div>
-                  <span>Nodal Plane</span>
-                </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                 <div className="flex items-center gap-3">
                   <div className="w-4 h-4 rounded-full bg-yellow-400 animate-pulse"></div>
                   <span>Moving Electron</span>
                 </div>
                 <div className="flex items-center gap-3">
+                  <div className="w-4 h-2 bg-purple-500 rounded"></div>
+                  <span>Orbital Path</span>
+                </div>
+                <div className="flex items-center gap-3">
                   <div className="w-4 h-4 rounded-full bg-purple-500"></div>
                   <span>Nucleus</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex gap-1">
+                    <div className="w-2 h-4 bg-red-500"></div>
+                    <div className="w-2 h-4 bg-green-500"></div>
+                    <div className="w-2 h-4 bg-blue-500"></div>
+                  </div>
+                  <span>XYZ Axes</span>
                 </div>
               </div>
             </CardContent>

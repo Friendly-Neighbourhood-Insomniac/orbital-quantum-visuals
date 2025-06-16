@@ -1,7 +1,7 @@
 
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Group, Vector3 } from 'three';
+import { Group, Vector3, BufferGeometry, Float32BufferAttribute } from 'three';
 import * as THREE from 'three';
 
 interface OrbitalVisualizationProps {
@@ -12,70 +12,72 @@ interface OrbitalVisualizationProps {
 const OrbitalVisualization = ({ orbitalType, isAnimating }: OrbitalVisualizationProps) => {
   const groupRef = useRef<Group>(null);
   const electronRef = useRef<THREE.Mesh>(null);
+  const pathRef = useRef<THREE.Line>(null);
   const coordinateSystemRef = useRef<Group>(null);
 
-  // Create orbital geometry based on type
-  const { positiveGeometry, negativeGeometry, nodalPlane } = useMemo(() => {
-    const createPOrbitalGeometry = (axis: 'x' | 'y' | 'z') => {
-      const segments = 32;
-      const rings = 16;
-      
-      // Create two spheres for the lobes
-      const positiveLobe = new THREE.SphereGeometry(1.2, segments, rings);
-      const negativeLobe = new THREE.SphereGeometry(1.2, segments, rings);
-      
-      // Position the lobes based on the axis
-      const offset = 1.5;
-      switch (axis) {
-        case 'x':
-          positiveLobe.translate(offset, 0, 0);
-          negativeLobe.translate(-offset, 0, 0);
-          break;
-        case 'y':
-          positiveLobe.translate(0, offset, 0);
-          negativeLobe.translate(0, -offset, 0);
-          break;
-        case 'z':
-          positiveLobe.translate(0, 0, offset);
-          negativeLobe.translate(0, 0, -offset);
-          break;
-      }
-      
-      // Create nodal plane
-      const planeGeometry = new THREE.PlaneGeometry(4, 4, 1, 1);
-      switch (axis) {
-        case 'x':
-          planeGeometry.rotateY(Math.PI / 2);
-          break;
-        case 'y':
-          planeGeometry.rotateX(Math.PI / 2);
-          break;
-        case 'z':
-          // Default orientation is correct for z
-          break;
-      }
-      
-      return {
-        positiveGeometry: positiveLobe,
-        negativeGeometry: negativeLobe,
-        nodalPlane: planeGeometry
-      };
-    };
+  // Generate orbital path points
+  const pathGeometry = useMemo(() => {
+    const points: Vector3[] = [];
+    const numPoints = 200;
+    const axis = orbitalType.slice(1) as 'x' | 'y' | 'z';
     
-    return createPOrbitalGeometry(orbitalType.slice(1) as 'x' | 'y' | 'z');
+    for (let i = 0; i <= numPoints; i++) {
+      const t = (i / numPoints) * Math.PI * 4; // Two complete figure-8 loops
+      const amplitude = 2.2;
+      
+      let x = 0, y = 0, z = 0;
+      
+      switch (axis) {
+        case 'x':
+          x = amplitude * Math.sin(t);
+          y = Math.sin(t * 2) * 0.8;
+          z = Math.cos(t * 2) * 0.8;
+          break;
+        case 'y':
+          x = Math.sin(t * 2) * 0.8;
+          y = amplitude * Math.sin(t);
+          z = Math.cos(t * 2) * 0.8;
+          break;
+        case 'z':
+          x = Math.sin(t * 2) * 0.8;
+          y = Math.cos(t * 2) * 0.8;
+          z = amplitude * Math.sin(t);
+          break;
+      }
+      
+      points.push(new Vector3(x, y, z));
+    }
+    
+    const geometry = new BufferGeometry().setFromPoints(points);
+    return geometry;
   }, [orbitalType]);
 
-  // Electron path calculation
+  // Electron position calculation
   const getElectronPosition = (time: number): Vector3 => {
     const axis = orbitalType.slice(1) as 'x' | 'y' | 'z';
-    const speed = 2;
-    const amplitude = 2.5;
+    const speed = 1.5;
+    const amplitude = 2.2;
     
-    // Create figure-8 pattern for p orbitals
     const t = time * speed;
-    const x = axis === 'x' ? amplitude * Math.sin(t) : Math.sin(t) * 0.3;
-    const y = axis === 'y' ? amplitude * Math.sin(t) : Math.cos(t * 2) * 0.3;
-    const z = axis === 'z' ? amplitude * Math.sin(t) : Math.sin(t * 3) * 0.2;
+    let x = 0, y = 0, z = 0;
+    
+    switch (axis) {
+      case 'x':
+        x = amplitude * Math.sin(t);
+        y = Math.sin(t * 2) * 0.8;
+        z = Math.cos(t * 2) * 0.8;
+        break;
+      case 'y':
+        x = Math.sin(t * 2) * 0.8;
+        y = amplitude * Math.sin(t);
+        z = Math.cos(t * 2) * 0.8;
+        break;
+      case 'z':
+        x = Math.sin(t * 2) * 0.8;
+        y = Math.cos(t * 2) * 0.8;
+        z = amplitude * Math.sin(t);
+        break;
+    }
     
     return new Vector3(x, y, z);
   };
@@ -83,12 +85,11 @@ const OrbitalVisualization = ({ orbitalType, isAnimating }: OrbitalVisualization
   // Animation
   useFrame((state) => {
     if (groupRef.current && isAnimating) {
-      groupRef.current.rotation.y += 0.005;
+      groupRef.current.rotation.y += 0.003;
     }
     
     if (coordinateSystemRef.current && isAnimating) {
-      // Subtle pulsing animation for the coordinate system
-      const scale = 1 + Math.sin(state.clock.elapsedTime * 2) * 0.05;
+      const scale = 1 + Math.sin(state.clock.elapsedTime * 1.5) * 0.02;
       coordinateSystemRef.current.scale.setScalar(scale);
     }
 
@@ -97,8 +98,8 @@ const OrbitalVisualization = ({ orbitalType, isAnimating }: OrbitalVisualization
       const position = getElectronPosition(state.clock.elapsedTime);
       electronRef.current.position.copy(position);
       
-      // Add slight glow effect
-      const glowIntensity = 0.5 + Math.sin(state.clock.elapsedTime * 4) * 0.3;
+      // Add glow effect
+      const glowIntensity = 0.6 + Math.sin(state.clock.elapsedTime * 3) * 0.4;
       if (electronRef.current.material && 'emissiveIntensity' in electronRef.current.material) {
         (electronRef.current.material as THREE.MeshPhongMaterial).emissiveIntensity = glowIntensity;
       }
@@ -106,27 +107,6 @@ const OrbitalVisualization = ({ orbitalType, isAnimating }: OrbitalVisualization
   });
 
   // Materials
-  const positiveMaterial = useMemo(() => new THREE.MeshPhongMaterial({
-    color: '#ef4444',
-    opacity: 0.7,
-    transparent: true,
-    shininess: 100
-  }), []);
-
-  const negativeMaterial = useMemo(() => new THREE.MeshPhongMaterial({
-    color: '#3b82f6',
-    opacity: 0.7,
-    transparent: true,
-    shininess: 100
-  }), []);
-
-  const nodalPlaneMaterial = useMemo(() => new THREE.MeshBasicMaterial({
-    color: '#6b7280',
-    opacity: 0.2,
-    transparent: true,
-    side: THREE.DoubleSide
-  }), []);
-
   const coordinateAxisMaterial = useMemo(() => ({
     x: new THREE.MeshBasicMaterial({ color: '#ef4444' }),
     y: new THREE.MeshBasicMaterial({ color: '#22c55e' }),
@@ -136,21 +116,24 @@ const OrbitalVisualization = ({ orbitalType, isAnimating }: OrbitalVisualization
   const electronMaterial = useMemo(() => new THREE.MeshPhongMaterial({
     color: '#fbbf24',
     emissive: '#f59e0b',
-    emissiveIntensity: 0.5
+    emissiveIntensity: 0.6
+  }), []);
+
+  const pathMaterial = useMemo(() => new THREE.LineBasicMaterial({
+    color: '#8b5cf6',
+    opacity: 0.6,
+    transparent: true,
+    linewidth: 2
   }), []);
 
   return (
     <group>
-      {/* Orbital Lobes */}
-      <group ref={groupRef}>
-        <mesh geometry={positiveGeometry} material={positiveMaterial} />
-        <mesh geometry={negativeGeometry} material={negativeMaterial} />
-        <mesh geometry={nodalPlane} material={nodalPlaneMaterial} />
-      </group>
+      {/* Orbital Path */}
+      <line ref={pathRef} geometry={pathGeometry} material={pathMaterial} />
 
       {/* Animated Electron */}
       <mesh ref={electronRef}>
-        <sphereGeometry args={[0.08]} />
+        <sphereGeometry args={[0.12]} />
         <primitive object={electronMaterial} attach="material" />
       </mesh>
 
@@ -158,43 +141,43 @@ const OrbitalVisualization = ({ orbitalType, isAnimating }: OrbitalVisualization
       <group ref={coordinateSystemRef}>
         {/* X-axis */}
         <mesh position={[0, 0, 0]} rotation={[0, 0, -Math.PI / 2]}>
-          <cylinderGeometry args={[0.02, 0.02, 6]} />
+          <cylinderGeometry args={[0.03, 0.03, 6]} />
           <primitive object={coordinateAxisMaterial.x} attach="material" />
         </mesh>
         
         {/* Y-axis */}
         <mesh position={[0, 0, 0]}>
-          <cylinderGeometry args={[0.02, 0.02, 6]} />
+          <cylinderGeometry args={[0.03, 0.03, 6]} />
           <primitive object={coordinateAxisMaterial.y} attach="material" />
         </mesh>
         
         {/* Z-axis */}
         <mesh position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
-          <cylinderGeometry args={[0.02, 0.02, 6]} />
+          <cylinderGeometry args={[0.03, 0.03, 6]} />
           <primitive object={coordinateAxisMaterial.z} attach="material" />
         </mesh>
 
         {/* Axis arrows */}
         <mesh position={[3, 0, 0]} rotation={[0, 0, -Math.PI / 2]}>
-          <coneGeometry args={[0.1, 0.3]} />
+          <coneGeometry args={[0.15, 0.4]} />
           <primitive object={coordinateAxisMaterial.x} attach="material" />
         </mesh>
         
         <mesh position={[0, 3, 0]}>
-          <coneGeometry args={[0.1, 0.3]} />
+          <coneGeometry args={[0.15, 0.4]} />
           <primitive object={coordinateAxisMaterial.y} attach="material" />
         </mesh>
         
         <mesh position={[0, 0, 3]} rotation={[Math.PI / 2, 0, 0]}>
-          <coneGeometry args={[0.1, 0.3]} />
+          <coneGeometry args={[0.15, 0.4]} />
           <primitive object={coordinateAxisMaterial.z} attach="material" />
         </mesh>
       </group>
 
       {/* Nucleus representation */}
       <mesh position={[0, 0, 0]}>
-        <sphereGeometry args={[0.1]} />
-        <meshPhongMaterial color="#8b5cf6" emissive="#7c3aed" emissiveIntensity={0.3} />
+        <sphereGeometry args={[0.08]} />
+        <meshPhongMaterial color="#8b5cf6" emissive="#7c3aed" emissiveIntensity={0.2} />
       </mesh>
     </group>
   );
