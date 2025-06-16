@@ -5,7 +5,9 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: mode === 'development' ? '/' : '/orbitale-animasie/',
+  // Use the site root for both development and production.
+  base: '/',
+> main
   server: {
     host: "::",
     port: 8080,
