@@ -1,7 +1,7 @@
 
 import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Mesh, BufferGeometry, Material, Vector3 } from 'three';
+import { Group, Vector3 } from 'three';
 import * as THREE from 'three';
 
 interface OrbitalVisualizationProps {
@@ -10,8 +10,9 @@ interface OrbitalVisualizationProps {
 }
 
 const OrbitalVisualization = ({ orbitalType, isAnimating }: OrbitalVisualizationProps) => {
-  const meshRef = useRef<Mesh>(null);
-  const coordinateSystemRef = useRef<THREE.Group>(null);
+  const groupRef = useRef<Group>(null);
+  const electronRef = useRef<THREE.Mesh>(null);
+  const coordinateSystemRef = useRef<Group>(null);
 
   // Create orbital geometry based on type
   const { positiveGeometry, negativeGeometry, nodalPlane } = useMemo(() => {
@@ -64,16 +65,43 @@ const OrbitalVisualization = ({ orbitalType, isAnimating }: OrbitalVisualization
     return createPOrbitalGeometry(orbitalType.slice(1) as 'x' | 'y' | 'z');
   }, [orbitalType]);
 
+  // Electron path calculation
+  const getElectronPosition = (time: number): Vector3 => {
+    const axis = orbitalType.slice(1) as 'x' | 'y' | 'z';
+    const speed = 2;
+    const amplitude = 2.5;
+    
+    // Create figure-8 pattern for p orbitals
+    const t = time * speed;
+    const x = axis === 'x' ? amplitude * Math.sin(t) : Math.sin(t) * 0.3;
+    const y = axis === 'y' ? amplitude * Math.sin(t) : Math.cos(t * 2) * 0.3;
+    const z = axis === 'z' ? amplitude * Math.sin(t) : Math.sin(t * 3) * 0.2;
+    
+    return new Vector3(x, y, z);
+  };
+
   // Animation
   useFrame((state) => {
-    if (meshRef.current && isAnimating) {
-      meshRef.current.rotation.y += 0.005;
+    if (groupRef.current && isAnimating) {
+      groupRef.current.rotation.y += 0.005;
     }
     
     if (coordinateSystemRef.current && isAnimating) {
       // Subtle pulsing animation for the coordinate system
-      const scale = 1 + Math.sin(state.clock.elapsedTime * 2) * 0.1;
+      const scale = 1 + Math.sin(state.clock.elapsedTime * 2) * 0.05;
       coordinateSystemRef.current.scale.setScalar(scale);
+    }
+
+    // Animate electron along orbital path
+    if (electronRef.current && isAnimating) {
+      const position = getElectronPosition(state.clock.elapsedTime);
+      electronRef.current.position.copy(position);
+      
+      // Add slight glow effect
+      const glowIntensity = 0.5 + Math.sin(state.clock.elapsedTime * 4) * 0.3;
+      if (electronRef.current.material && 'emissiveIntensity' in electronRef.current.material) {
+        (electronRef.current.material as THREE.MeshPhongMaterial).emissiveIntensity = glowIntensity;
+      }
     }
   });
 
@@ -105,14 +133,26 @@ const OrbitalVisualization = ({ orbitalType, isAnimating }: OrbitalVisualization
     z: new THREE.MeshBasicMaterial({ color: '#3b82f6' })
   }), []);
 
+  const electronMaterial = useMemo(() => new THREE.MeshPhongMaterial({
+    color: '#fbbf24',
+    emissive: '#f59e0b',
+    emissiveIntensity: 0.5
+  }), []);
+
   return (
     <group>
       {/* Orbital Lobes */}
-      <group ref={meshRef}>
+      <group ref={groupRef}>
         <mesh geometry={positiveGeometry} material={positiveMaterial} />
         <mesh geometry={negativeGeometry} material={negativeMaterial} />
         <mesh geometry={nodalPlane} material={nodalPlaneMaterial} />
       </group>
+
+      {/* Animated Electron */}
+      <mesh ref={electronRef}>
+        <sphereGeometry args={[0.08]} />
+        <primitive object={electronMaterial} attach="material" />
+      </mesh>
 
       {/* Coordinate System */}
       <group ref={coordinateSystemRef}>
@@ -154,7 +194,7 @@ const OrbitalVisualization = ({ orbitalType, isAnimating }: OrbitalVisualization
       {/* Nucleus representation */}
       <mesh position={[0, 0, 0]}>
         <sphereGeometry args={[0.1]} />
-        <meshPhongMaterial color="#fbbf24" emissive="#f59e0b" emissiveIntensity={0.3} />
+        <meshPhongMaterial color="#8b5cf6" emissive="#7c3aed" emissiveIntensity={0.3} />
       </mesh>
     </group>
   );
