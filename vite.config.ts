@@ -5,7 +5,8 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: mode === 'development' ? '/' : '/orbital-quantum-visuals/',
+  // Use the site root for both development and production.
+  base: '/',
   server: {
     host: "::",
     port: 8080,
