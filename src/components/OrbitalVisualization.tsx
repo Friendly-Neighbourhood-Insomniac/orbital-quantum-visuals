@@ -78,32 +78,32 @@ const OrbitalVisualization = ({ orbitalType, isAnimating }: OrbitalVisualization
   });
 
   // Materials
-  const positiveMaterial = new THREE.MeshPhongMaterial({
+  const positiveMaterial = useMemo(() => new THREE.MeshPhongMaterial({
     color: '#ef4444',
     opacity: 0.7,
     transparent: true,
     shininess: 100
-  });
+  }), []);
 
-  const negativeMaterial = new THREE.MeshPhongMaterial({
+  const negativeMaterial = useMemo(() => new THREE.MeshPhongMaterial({
     color: '#3b82f6',
     opacity: 0.7,
     transparent: true,
     shininess: 100
-  });
+  }), []);
 
-  const nodalPlaneMaterial = new THREE.MeshBasicMaterial({
+  const nodalPlaneMaterial = useMemo(() => new THREE.MeshBasicMaterial({
     color: '#6b7280',
     opacity: 0.2,
     transparent: true,
     side: THREE.DoubleSide
-  });
+  }), []);
 
-  const coordinateAxisMaterial = {
+  const coordinateAxisMaterial = useMemo(() => ({
     x: new THREE.MeshBasicMaterial({ color: '#ef4444' }),
     y: new THREE.MeshBasicMaterial({ color: '#22c55e' }),
     z: new THREE.MeshBasicMaterial({ color: '#3b82f6' })
-  };
+  }), []);
 
   return (
     <group>
@@ -117,10 +117,9 @@ const OrbitalVisualization = ({ orbitalType, isAnimating }: OrbitalVisualization
       {/* Coordinate System */}
       <group ref={coordinateSystemRef}>
         {/* X-axis */}
-        <mesh position={[0, 0, 0]}>
+        <mesh position={[0, 0, 0]} rotation={[0, 0, -Math.PI / 2]}>
           <cylinderGeometry args={[0.02, 0.02, 6]} />
           <primitive object={coordinateAxisMaterial.x} attach="material" />
-          <primitive object={new THREE.Matrix4().makeRotationZ(-Math.PI / 2)} attach="matrix" />
         </mesh>
         
         {/* Y-axis */}
@@ -130,17 +129,15 @@ const OrbitalVisualization = ({ orbitalType, isAnimating }: OrbitalVisualization
         </mesh>
         
         {/* Z-axis */}
-        <mesh position={[0, 0, 0]}>
+        <mesh position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
           <cylinderGeometry args={[0.02, 0.02, 6]} />
           <primitive object={coordinateAxisMaterial.z} attach="material" />
-          <primitive object={new THREE.Matrix4().makeRotationX(Math.PI / 2)} attach="matrix" />
         </mesh>
 
         {/* Axis arrows */}
-        <mesh position={[3, 0, 0]}>
+        <mesh position={[3, 0, 0]} rotation={[0, 0, -Math.PI / 2]}>
           <coneGeometry args={[0.1, 0.3]} />
           <primitive object={coordinateAxisMaterial.x} attach="material" />
-          <primitive object={new THREE.Matrix4().makeRotationZ(-Math.PI / 2)} attach="matrix" />
         </mesh>
         
         <mesh position={[0, 3, 0]}>
@@ -148,10 +145,9 @@ const OrbitalVisualization = ({ orbitalType, isAnimating }: OrbitalVisualization
           <primitive object={coordinateAxisMaterial.y} attach="material" />
         </mesh>
         
-        <mesh position={[0, 0, 3]}>
+        <mesh position={[0, 0, 3]} rotation={[Math.PI / 2, 0, 0]}>
           <coneGeometry args={[0.1, 0.3]} />
           <primitive object={coordinateAxisMaterial.z} attach="material" />
-          <primitive object={new THREE.Matrix4().makeRotationX(Math.PI / 2)} attach="matrix" />
         </mesh>
       </group>
 
