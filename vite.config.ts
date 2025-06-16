@@ -7,7 +7,7 @@ import { componentTagger } from "lovable-tagger";
 export default defineConfig(({ mode }) => ({
   // Use the site root for both development and production.
   // The base path is set to the repository name for GitHub Pages deployments.
-  base: '/orbitale-animasie/',
+  base: '/',
   server: {
     host: "::",
     port: 8080,
