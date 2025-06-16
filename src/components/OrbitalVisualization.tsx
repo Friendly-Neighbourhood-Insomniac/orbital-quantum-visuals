@@ -107,11 +107,11 @@ const OrbitalVisualization = ({ orbitalType, isAnimating }: OrbitalVisualization
 
   return (
     <group ref={groupRef}>
-      {/* Orbital Path - using proper Three.js line component */}
-      <line_>
-        <primitive object={pathGeometry} attach="geometry" />
-        <lineBasicMaterial color="#8b5cf6" opacity={0.6} transparent linewidth={2} />
-      </line_>
+      {/* Orbital Path - using proper React Three Fiber line */}
+      <line>
+        <bufferGeometry attach="geometry" {...pathGeometry} />
+        <lineBasicMaterial attach="material" color="#8b5cf6" opacity={0.6} transparent />
+      </line>
 
       {/* Animated Electron */}
       <mesh ref={electronRef}>
