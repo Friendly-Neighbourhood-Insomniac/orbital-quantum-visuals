@@ -64,6 +64,10 @@ This project is built with:
 
 Simply open [Lovable](https://lovable.dev/projects/dfad5efe-31f7-4692-8e8a-28fdf38b62e1) and click on Share -> Publish.
 
+### Deploying to GitHub Pages
+If you host the `dist` folder from a repository subpath (e.g. `https://USERNAME.github.io/REPO_NAME/`), update the `base` option in `vite.config.ts` to `"/REPO_NAME/"` before running `npm run build`.
+
+
 ## Can I connect a custom domain to my Lovable project?
 
 Yes, you can!
