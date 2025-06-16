@@ -100,12 +100,13 @@ const OrbitalVisualization = ({ orbitalType, isAnimating }: OrbitalVisualization
   });
 
   return (
-    <group ref={groupRef}>
-      {/* Orbital Path - more visible with thicker line */}
-      <mesh>
-        <primitive object={pathGeometry} attach="geometry" />
-        <lineBasicMaterial attach="material" color="#8b5cf6" opacity={0.8} transparent linewidth={3} />
-      </mesh>
+    <>
+      <group ref={groupRef}>
+        {/* Orbital Path - more visible with thicker line */}
+        <mesh>
+          <primitive object={pathGeometry} attach="geometry" />
+          <lineBasicMaterial attach="material" color="#ff00ff" opacity={0.8} transparent linewidth={3} />
+        </mesh>
 
       {/* Animated Electron */}
       <mesh ref={electronRef}>
@@ -117,6 +118,12 @@ const OrbitalVisualization = ({ orbitalType, isAnimating }: OrbitalVisualization
         />
       </mesh>
 
+        {/* Nucleus representation */}
+        <mesh position={[0, 0, 0]}>
+          <sphereGeometry args={[0.08]} />
+          <meshPhongMaterial color="#8b5cf6" emissive="#7c3aed" emissiveIntensity={0.2} />
+        </mesh>
+      </group>
       {/* Static Coordinate System - positioned outside the rotating group */}
       <group>
         {/* X-axis */}
@@ -153,13 +160,7 @@ const OrbitalVisualization = ({ orbitalType, isAnimating }: OrbitalVisualization
           <meshBasicMaterial color="#3b82f6" />
         </mesh>
       </group>
-
-      {/* Nucleus representation */}
-      <mesh position={[0, 0, 0]}>
-        <sphereGeometry args={[0.08]} />
-        <meshPhongMaterial color="#8b5cf6" emissive="#7c3aed" emissiveIntensity={0.2} />
-      </mesh>
-    </group>
+    </>
   );
 };
 
