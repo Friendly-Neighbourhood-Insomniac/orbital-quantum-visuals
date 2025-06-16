@@ -12,7 +12,6 @@ interface OrbitalVisualizationProps {
 const OrbitalVisualization = ({ orbitalType, isAnimating }: OrbitalVisualizationProps) => {
   const groupRef = useRef<Group>(null);
   const electronRef = useRef<THREE.Mesh>(null);
-  const coordinateSystemRef = useRef<Group>(null);
 
   // Generate orbital path points
   const pathGeometry = useMemo(() => {
@@ -81,15 +80,10 @@ const OrbitalVisualization = ({ orbitalType, isAnimating }: OrbitalVisualization
     return new Vector3(x, y, z);
   };
 
-  // Animation
+  // Animation - only rotate the entire group, not coordinate system
   useFrame((state) => {
     if (groupRef.current && isAnimating) {
       groupRef.current.rotation.y += 0.003;
-    }
-    
-    if (coordinateSystemRef.current && isAnimating) {
-      const scale = 1 + Math.sin(state.clock.elapsedTime * 1.5) * 0.02;
-      coordinateSystemRef.current.scale.setScalar(scale);
     }
 
     // Animate electron along orbital path
@@ -107,10 +101,10 @@ const OrbitalVisualization = ({ orbitalType, isAnimating }: OrbitalVisualization
 
   return (
     <group ref={groupRef}>
-      {/* Orbital Path - using mesh with line geometry */}
+      {/* Orbital Path - more visible with thicker line */}
       <mesh>
         <primitive object={pathGeometry} attach="geometry" />
-        <lineBasicMaterial attach="material" color="#8b5cf6" opacity={0.6} transparent />
+        <lineBasicMaterial attach="material" color="#8b5cf6" opacity={0.8} transparent linewidth={3} />
       </mesh>
 
       {/* Animated Electron */}
@@ -123,8 +117,8 @@ const OrbitalVisualization = ({ orbitalType, isAnimating }: OrbitalVisualization
         />
       </mesh>
 
-      {/* Coordinate System */}
-      <group ref={coordinateSystemRef}>
+      {/* Static Coordinate System - positioned outside the rotating group */}
+      <group>
         {/* X-axis */}
         <mesh position={[0, 0, 0]} rotation={[0, 0, -Math.PI / 2]}>
           <cylinderGeometry args={[0.03, 0.03, 6]} />

@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,7 +15,6 @@ const Index = () => {
       type: 'px' as const,
       title: 'px Orbital',
       description: 'Electron motion along x-axis in dumbbell pattern',
-      equation: 'ψ(px) ∝ x·e^(-r/a₀)',
       symmetry: 'Dumbbell shape along x-axis',
       nodes: 'Nodal plane at x = 0 (yz plane)'
     },
@@ -22,7 +22,6 @@ const Index = () => {
       type: 'py' as const,
       title: 'py Orbital',
       description: 'Electron motion along y-axis in dumbbell pattern',
-      equation: 'ψ(py) ∝ y·e^(-r/a₀)',
       symmetry: 'Dumbbell shape along y-axis',
       nodes: 'Nodal plane at y = 0 (xz plane)'
     },
@@ -30,7 +29,6 @@ const Index = () => {
       type: 'pz' as const,
       title: 'pz Orbital',
       description: 'Electron motion along z-axis in dumbbell pattern',
-      equation: 'ψ(pz) ∝ z·e^(-r/a₀)',
       symmetry: 'Dumbbell shape along z-axis',
       nodes: 'Nodal plane at z = 0 (xy plane)'
     }
@@ -99,15 +97,6 @@ const Index = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div>
-                      <h4 className="font-semibold text-blue-300 mb-2">Wave Function</h4>
-                      <code className="text-sm bg-black/30 p-2 rounded block text-green-300">
-                        {orbital.equation}
-                      </code>
-                    </div>
-                    
-                    <Separator className="bg-white/20" />
-                    
                     <div>
                       <h4 className="font-semibold text-blue-300 mb-2">Symmetry</h4>
                       <p className="text-sm text-gray-300">
