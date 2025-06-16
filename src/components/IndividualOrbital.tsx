@@ -1,4 +1,5 @@
 
+
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Html } from '@react-three/drei';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -60,15 +61,15 @@ const IndividualOrbital = ({ orbitalType, isAnimating, title, description }: Ind
         <div className="mt-4 flex items-center justify-center gap-4">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-yellow-400 animate-pulse"></div>
-            <span className="text-xs text-gray-300">Electron</span>
+            <span className="text-xs text-gray-300">Elektron</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-1 bg-purple-500 rounded"></div>
-            <span className="text-xs text-gray-300">Orbital Path</span>
+            <span className="text-xs text-gray-300">Orbitaal Pad</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-purple-500"></div>
-            <span className="text-xs text-gray-300">Nucleus</span>
+            <span className="text-xs text-gray-300">Kern</span>
           </div>
         </div>
       </CardContent>
@@ -77,3 +78,4 @@ const IndividualOrbital = ({ orbitalType, isAnimating, title, description }: Ind
 };
 
 export default IndividualOrbital;
+

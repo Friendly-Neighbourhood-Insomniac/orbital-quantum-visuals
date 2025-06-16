@@ -1,4 +1,5 @@
 
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,24 +14,24 @@ const Index = () => {
   const orbitalData = [
     {
       type: 'px' as const,
-      title: 'px Orbital',
-      description: 'Electron motion along x-axis in dumbbell pattern',
-      symmetry: 'Dumbbell shape along x-axis',
-      nodes: 'Nodal plane at x = 0 (yz plane)'
+      title: 'px Orbitaal',
+      description: 'Elektronbeweging langs x-as in halterpatroon',
+      symmetry: 'Haltervorm langs x-as',
+      nodes: 'Knoopvlak by x = 0 (yz vlak)'
     },
     {
       type: 'py' as const,
-      title: 'py Orbital',
-      description: 'Electron motion along y-axis in dumbbell pattern',
-      symmetry: 'Dumbbell shape along y-axis',
-      nodes: 'Nodal plane at y = 0 (xz plane)'
+      title: 'py Orbitaal',
+      description: 'Elektronbeweging langs y-as in halterpatroon',
+      symmetry: 'Haltervorm langs y-as',
+      nodes: 'Knoopvlak by y = 0 (xz vlak)'
     },
     {
       type: 'pz' as const,
-      title: 'pz Orbital',
-      description: 'Electron motion along z-axis in dumbbell pattern',
-      symmetry: 'Dumbbell shape along z-axis',
-      nodes: 'Nodal plane at z = 0 (xy plane)'
+      title: 'pz Orbitaal',
+      description: 'Elektronbeweging langs z-as in halterpatroon',
+      symmetry: 'Haltervorm langs z-as',
+      nodes: 'Knoopvlak by z = 0 (xy vlak)'
     }
   ];
 
@@ -41,10 +42,10 @@ const Index = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              P Orbital Electron Animations
+              P Orbitaal Elektron Animasies
             </h1>
             <p className="text-xl text-blue-200 max-w-3xl mx-auto">
-              Watch electrons follow their quantum mechanical paths in px, py, and pz atomic orbitals with real-time 3D animations
+              Kyk hoe elektrone hul kwantum-meganiese paaie volg in px, py, en pz atoom-orbitale met intydse 3D animasies
             </p>
           </div>
 
@@ -55,15 +56,22 @@ const Index = () => {
               variant="outline"
               className="bg-white/10 hover:bg-white/20 text-white border-white/30 px-6 py-3 text-lg"
             >
-              {isAnimating ? 'Pause' : 'Play'} All Animations
+              {isAnimating ? 'Pouseer' : 'Speel'} Alle Animasies
             </Button>
             <Button
               onClick={() => setShowInfo(!showInfo)}
               variant="outline"
               className="bg-white/10 hover:bg-white/20 text-white border-white/30 px-6 py-3 text-lg"
             >
-              {showInfo ? 'Hide' : 'Show'} Details
+              {showInfo ? 'Versteek' : 'Wys'} Besonderhede
             </Button>
+          </div>
+
+          {/* Developer Credit */}
+          <div className="text-center mb-8">
+            <h4 className="text-lg text-blue-300 font-medium">
+              Ontwikkelaar: T. Faul
+            </h4>
           </div>
         </div>
       </div>
@@ -90,7 +98,7 @@ const Index = () => {
                 <Card key={`info-${orbital.type}`} className="bg-white/10 backdrop-blur-sm border-white/20 text-white">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      {orbital.title} Details
+                      {orbital.title} Besonderhede
                       <Badge variant="secondary" className="bg-blue-600 text-white">
                         {orbital.type.toUpperCase()}
                       </Badge>
@@ -98,7 +106,7 @@ const Index = () => {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div>
-                      <h4 className="font-semibold text-blue-300 mb-2">Symmetry</h4>
+                      <h4 className="font-semibold text-blue-300 mb-2">Simmetrie</h4>
                       <p className="text-sm text-gray-300">
                         {orbital.symmetry}
                       </p>
@@ -107,7 +115,7 @@ const Index = () => {
                     <Separator className="bg-white/20" />
                     
                     <div>
-                      <h4 className="font-semibold text-blue-300 mb-2">Nodes</h4>
+                      <h4 className="font-semibold text-blue-300 mb-2">Knope</h4>
                       <p className="text-sm text-gray-300">
                         {orbital.nodes}
                       </p>
@@ -121,21 +129,21 @@ const Index = () => {
           {/* Updated Legend */}
           <Card className="mt-6 bg-white/10 backdrop-blur-sm border-white/20 text-white">
             <CardHeader>
-              <CardTitle className="text-lg text-center">Visualization Legend</CardTitle>
+              <CardTitle className="text-lg text-center">Visualisering Legende</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                 <div className="flex items-center gap-3">
                   <div className="w-4 h-4 rounded-full bg-yellow-400 animate-pulse"></div>
-                  <span>Moving Electron</span>
+                  <span>Bewegende Elektron</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-4 h-2 bg-purple-500 rounded"></div>
-                  <span>Orbital Path</span>
+                  <span>Orbitaal Pad</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-4 h-4 rounded-full bg-purple-500"></div>
-                  <span>Nucleus</span>
+                  <span>Kern</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="flex gap-1">
@@ -143,7 +151,7 @@ const Index = () => {
                     <div className="w-2 h-4 bg-green-500"></div>
                     <div className="w-2 h-4 bg-blue-500"></div>
                   </div>
-                  <span>XYZ Axes</span>
+                  <span>XYZ Asse</span>
                 </div>
               </div>
             </CardContent>
@@ -155,3 +163,4 @@ const Index = () => {
 };
 
 export default Index;
+
