@@ -6,7 +6,8 @@ import { componentTagger } from "lovable-tagger";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   // Use the site root for both development and production.
-  base: '/',
+  // The base path is set to the repository name for GitHub Pages deployments.
+  base: '/orbitale-animasie/',
   server: {
     host: "::",
     port: 8080,
