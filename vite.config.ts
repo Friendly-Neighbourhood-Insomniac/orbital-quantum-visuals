@@ -7,6 +7,7 @@ import { componentTagger } from "lovable-tagger";
 export default defineConfig(({ mode }) => ({
   // Use the site root for both development and production.
   base: '/',
+> main
   server: {
     host: "::",
     port: 8080,
