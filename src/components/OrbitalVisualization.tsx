@@ -1,7 +1,7 @@
 
-import { useRef, useMemo, useEffect } from 'react';
+import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Group, Vector3, BufferGeometry, Float32BufferAttribute } from 'three';
+import { Group, Vector3, BufferGeometry } from 'three';
 import * as THREE from 'three';
 
 interface OrbitalVisualizationProps {
@@ -12,7 +12,6 @@ interface OrbitalVisualizationProps {
 const OrbitalVisualization = ({ orbitalType, isAnimating }: OrbitalVisualizationProps) => {
   const groupRef = useRef<Group>(null);
   const electronRef = useRef<THREE.Mesh>(null);
-  const pathRef = useRef<THREE.Line>(null);
   const coordinateSystemRef = useRef<Group>(null);
 
   // Generate orbital path points
@@ -106,35 +105,22 @@ const OrbitalVisualization = ({ orbitalType, isAnimating }: OrbitalVisualization
     }
   });
 
-  // Materials
-  const coordinateAxisMaterial = useMemo(() => ({
-    x: new THREE.MeshBasicMaterial({ color: '#ef4444' }),
-    y: new THREE.MeshBasicMaterial({ color: '#22c55e' }),
-    z: new THREE.MeshBasicMaterial({ color: '#3b82f6' })
-  }), []);
-
-  const electronMaterial = useMemo(() => new THREE.MeshPhongMaterial({
-    color: '#fbbf24',
-    emissive: '#f59e0b',
-    emissiveIntensity: 0.6
-  }), []);
-
-  const pathMaterial = useMemo(() => new THREE.LineBasicMaterial({
-    color: '#8b5cf6',
-    opacity: 0.6,
-    transparent: true,
-    linewidth: 2
-  }), []);
-
   return (
-    <group>
-      {/* Orbital Path */}
-      <line ref={pathRef} geometry={pathGeometry} material={pathMaterial} />
+    <group ref={groupRef}>
+      {/* Orbital Path - using proper Three.js line component */}
+      <line_>
+        <primitive object={pathGeometry} attach="geometry" />
+        <lineBasicMaterial color="#8b5cf6" opacity={0.6} transparent linewidth={2} />
+      </line_>
 
       {/* Animated Electron */}
       <mesh ref={electronRef}>
         <sphereGeometry args={[0.12]} />
-        <primitive object={electronMaterial} attach="material" />
+        <meshPhongMaterial 
+          color="#fbbf24" 
+          emissive="#f59e0b" 
+          emissiveIntensity={0.6} 
+        />
       </mesh>
 
       {/* Coordinate System */}
@@ -142,35 +128,35 @@ const OrbitalVisualization = ({ orbitalType, isAnimating }: OrbitalVisualization
         {/* X-axis */}
         <mesh position={[0, 0, 0]} rotation={[0, 0, -Math.PI / 2]}>
           <cylinderGeometry args={[0.03, 0.03, 6]} />
-          <primitive object={coordinateAxisMaterial.x} attach="material" />
+          <meshBasicMaterial color="#ef4444" />
         </mesh>
         
         {/* Y-axis */}
         <mesh position={[0, 0, 0]}>
           <cylinderGeometry args={[0.03, 0.03, 6]} />
-          <primitive object={coordinateAxisMaterial.y} attach="material" />
+          <meshBasicMaterial color="#22c55e" />
         </mesh>
         
         {/* Z-axis */}
         <mesh position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
           <cylinderGeometry args={[0.03, 0.03, 6]} />
-          <primitive object={coordinateAxisMaterial.z} attach="material" />
+          <meshBasicMaterial color="#3b82f6" />
         </mesh>
 
         {/* Axis arrows */}
         <mesh position={[3, 0, 0]} rotation={[0, 0, -Math.PI / 2]}>
           <coneGeometry args={[0.15, 0.4]} />
-          <primitive object={coordinateAxisMaterial.x} attach="material" />
+          <meshBasicMaterial color="#ef4444" />
         </mesh>
         
         <mesh position={[0, 3, 0]}>
           <coneGeometry args={[0.15, 0.4]} />
-          <primitive object={coordinateAxisMaterial.y} attach="material" />
+          <meshBasicMaterial color="#22c55e" />
         </mesh>
         
         <mesh position={[0, 0, 3]} rotation={[Math.PI / 2, 0, 0]}>
           <coneGeometry args={[0.15, 0.4]} />
-          <primitive object={coordinateAxisMaterial.z} attach="material" />
+          <meshBasicMaterial color="#3b82f6" />
         </mesh>
       </group>
 
