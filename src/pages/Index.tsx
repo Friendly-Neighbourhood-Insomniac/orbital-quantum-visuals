@@ -40,7 +40,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              P Orbitaal Elektron Animasies
+              P-Orbitaal Elektron Animasies
             </h1>
             <p className="text-xl text-blue-200 max-w-3xl mx-auto">
               Kyk hoe elektrone hul kwantum-meganiese paaie volg in px, py, en pz atoom-orbitale met intydse 3D animasies
