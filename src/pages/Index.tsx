@@ -1,5 +1,3 @@
-
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -56,7 +54,7 @@ const Index = () => {
               variant="outline"
               className="bg-white/10 hover:bg-white/20 text-white border-white/30 px-6 py-3 text-lg"
             >
-              {isAnimating ? 'Pouseer' : 'Speel'} Alle Animasies
+              {isAnimating ? 'Staak alle animasies' : 'Speel'} 
             </Button>
             <Button
               onClick={() => setShowInfo(!showInfo)}
@@ -163,4 +161,3 @@ const Index = () => {
 };
 
 export default Index;
-
